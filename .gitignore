@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/TrafficEscape2.0/obj
+/TrafficEscape2.0/.vs/TrafficEscape2.0
+/TrafficEscape2.0/bin/Debug/net8.0
+/.vs/TrafficEscape2.0/v17
+/TrafficEscape2.0/.vs/ProjectEvaluation
