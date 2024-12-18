@@ -6,6 +6,8 @@ namespace TrafficEscape2._0.Repositories
     {
         public Task<List<RouteSlots>> GetSlotData(string fromPlaceId, string toPlaceId, int dayOfWeek);
 
+        public Task<List<RouteSlots>> GetAllRoutesForTime(int dayOfWeek, int timeSlot);
+
         public Task InsertSlotIfNotExist(string fromPlaceId, string toPlaceId, int dayOfWeek, int timeSlot);
 
         public Task UpsertSlotData(RouteSlots routeSlots);

@@ -69,5 +69,27 @@ namespace TrafficEscape2._0.Repositories
         {
             return this.cosmosDbService.GetContainer("RouteSlots");
         }
+
+        public async Task<List<RouteSlots>> GetAllRoutesForTime(int dayOfWeek, int timeSlot)
+        {
+            var container = GetContainer();
+            var query = new QueryDefinition(
+                "SELECT * FROM c WHERE c.dayOfWeek = @dayOfWeek AND c.timeSlot = @timeSlot"
+            )
+            .WithParameter("@dayOfWeek", dayOfWeek)
+            .WithParameter("@timeSlot", timeSlot);
+
+            var results = new List<RouteSlots>();
+            using (var iterator = container.GetItemQueryIterator<RouteSlots>(query, requestOptions: new QueryRequestOptions { PartitionKey = new PartitionKey(dayOfWeek) }))
+            {
+                while (iterator.HasMoreResults)
+                {
+                    var response = await iterator.ReadNextAsync();
+                    results.AddRange(response);
+                }
+            }
+
+            return results;
+        }
     }
 }
