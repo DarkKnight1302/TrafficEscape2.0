@@ -112,7 +112,7 @@ namespace TrafficEscape2._0.Services
                 current += 10;
                 if ((current % 100) == 60)
                 {
-                    current = current - current % 100;
+                    current = current - (current % 100);
                     current += 100;
                 }
             }
