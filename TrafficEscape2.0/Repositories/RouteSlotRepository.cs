@@ -51,7 +51,7 @@ namespace TrafficEscape2._0.Repositories
                 updatedAt = DateTimeOffset.UtcNow
             };
             var container = GetContainer();
-            await container.UpsertItemAsync(routeSlots).ConfigureAwait(false);
+            await container.CreateItemAsync(routeSlots, new PartitionKey(dayOfWeek)).ConfigureAwait(false);
         }
 
         private string GenerateUid(string fromPlaceId, string toPlaceId, int dayOfWeek, int timeSlot)
