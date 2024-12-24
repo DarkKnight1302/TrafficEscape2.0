@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.46.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="9.0.0" />
     <PackageReference Include="NewHorizonLib" Version="1.0.1" />
