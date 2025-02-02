@@ -1,5 +1,7 @@
 using NewHorizonLib;
+using Quartz;
 using TrafficEscape2._0.ApiClients;
+using TrafficEscape2._0.Cron;
 using TrafficEscape2._0.Handlers;
 using TrafficEscape2._0.Repositories;
 using TrafficEscape2._0.Services;
@@ -23,7 +25,19 @@ builder.Services.AddSingleton<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddSingleton<ILoginHandler, LoginHandler>();
 
 Registration.InitializeServices(builder.Services, "TrafficEscape", 500);
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("TrafficAnalysisJob");
 
+    q.AddJob<TrafficAnalysisJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+                        .ForJob(jobKey)
+                        .WithIdentity("TrafficAnalysisJob-trigger")
+                        .WithCronSchedule("0 */10 * * * ?"));
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

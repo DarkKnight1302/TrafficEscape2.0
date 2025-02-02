@@ -10,6 +10,5 @@ namespace TrafficEscape2._0.Services.Interfaces
 
         public Task<bool> IsAnalysisCompleted(string userId);
 
-        public Task<BestTime> GetBestTrafficTime(string userId);
     }
 }

@@ -17,21 +17,6 @@ namespace TrafficEscape2._0.Services
             this.userRepository = userRepository;    
         }
 
-        public async Task<BestTime> GetBestTrafficTime(string userId)
-        {
-            User user = await this.userRepository.GetUser(userId);
-            if (user == null)
-            {
-                throw new TrafficEscapeException("User doesn't exist", ErrorCodes.UserNotFound);
-            }
-            BestTime bestTime = new BestTime()
-            {
-                BestHomeToOfficeTime = user.BestTimeHomeOffice,
-                BestOfficeToHomeTime = user.BestTimeOfficeHome
-            };
-            return bestTime;
-        }
-
         public async Task<bool> IsAnalysisCompleted(string userId)
         {
             User user = await this.userRepository.GetUser(userId);

@@ -15,5 +15,7 @@
         public int OfficeToHomeStartTime { get; set; }
 
         public int OfficeToHomeEndTime { get; set; }
+
+        public string Audience { get; set; }
     }
 }
