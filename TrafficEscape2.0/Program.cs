@@ -18,13 +18,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
+    options.AddPolicy(name: "AllowSpecificOrigin",
+                      builder =>
+                      {
+                          builder.WithOrigins("https://localhost:7174") // Your frontend URL
+                                 .AllowAnyHeader()
+                                 .AllowAnyMethod();
+                      });
 });
 builder.Services.AddSingleton<ITrafficComputeService, TrafficComputeService>();
 builder.Services.AddSingleton<IRouteSlotRepository, RouteSlotRepository>();
@@ -50,7 +50,7 @@ builder.Services.AddQuartz(q =>
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors("AllowSpecificOrigin");
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
