@@ -16,6 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 builder.Services.AddSingleton<ITrafficComputeService, TrafficComputeService>();
 builder.Services.AddSingleton<IRouteSlotRepository, RouteSlotRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
@@ -40,6 +50,7 @@ builder.Services.AddQuartz(q =>
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 var app = builder.Build();
 
+app.UseCors();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
