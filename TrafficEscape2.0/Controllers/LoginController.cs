@@ -18,7 +18,7 @@ namespace TrafficEscape2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginRequest loginRequest)
         {
-            var response = await this.loginHandler.Login(loginRequest);
+            LoginResponse response = await this.loginHandler.Login(loginRequest);
             return Ok(response);
         }
     }
