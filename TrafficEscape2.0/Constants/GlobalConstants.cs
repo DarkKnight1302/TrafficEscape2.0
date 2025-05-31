@@ -6,6 +6,6 @@
 
         public const string TrafficEscapeServer = "TrafficEscapeServer";
 
-        public const int TokenExpiryDays = 1;
+        public const int TokenExpiryDays = 365;
     }
 }
