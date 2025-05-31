@@ -31,7 +31,8 @@ namespace TrafficEscape2._0.Handlers
             string token = this.tokenService.GenerateToken(claims, GlobalConstants.TrafficEscapeServer, loginRequest.Audience, GlobalConstants.TokenExpiryDays);
             LoginResponse loginResponse = new LoginResponse()
             {
-                SessionToken = token
+                SessionToken = token,
+                UserId = userId
             };
             return loginResponse;
         }
