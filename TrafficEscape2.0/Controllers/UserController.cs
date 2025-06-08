@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NewHorizonLib.Services.Interfaces;
 using System.Security.Claims;
 using TrafficEscape2._0.Constants;
@@ -23,8 +24,12 @@ namespace TrafficEscape2._0.Controllers
             this.tokenService = tokenService;
         }
 
+        [AuthRequired]
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(UserUpdateRequest userUpdateRequest)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateUser(
+        [FromBody] UserUpdateRequest userUpdateRequest)
         {
             string token = ExtractBearerToken();
             if (token == null)
@@ -42,7 +47,8 @@ namespace TrafficEscape2._0.Controllers
             {
                 this.logger.LogInformation("Updating user");
                 await this.userService.UpdateUser(userUpdateRequest);
-            } else
+            }
+            else
             {
                 return Unauthorized("Invalid token");
             }
@@ -50,20 +56,12 @@ namespace TrafficEscape2._0.Controllers
             return Ok();
         }
 
+
         private string ExtractBearerToken()
         {
-            if (HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader))
+            if (HttpContext.Request.Headers.TryGetValue("Auth", out var authHeader))
             {
-                // Step 2: Extract the token from the header
-                var bearerToken = authHeader.FirstOrDefault();
-
-                if (!string.IsNullOrEmpty(bearerToken) && bearerToken.StartsWith("Bearer "))
-                {
-                    // Step 3: Parse the token (remove "Bearer " prefix)
-                    var token = bearerToken.Substring("Bearer ".Length).Trim();
-
-                    return token;
-                }
+                return authHeader;
             }
             return null;
         }
