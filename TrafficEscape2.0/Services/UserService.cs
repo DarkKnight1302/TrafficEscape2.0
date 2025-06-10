@@ -11,10 +11,12 @@ namespace TrafficEscape2._0.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly ITrafficComputeService trafficComputeService;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, ITrafficComputeService trafficComputeService)
         {
-            this.userRepository = userRepository;    
+            this.userRepository = userRepository;
+            this.trafficComputeService = trafficComputeService;
         }
 
         public async Task<bool> IsAnalysisCompleted(string userId)
@@ -48,6 +50,8 @@ namespace TrafficEscape2._0.Services
             }
             user = UpdateUserObj(userUpdateRequest, user);
             await this.userRepository.UpdateUser(user).ConfigureAwait(false);
+            await this.trafficComputeService.InsertAllSlotsForTimeRange(user.HomePlaceId, user.OfficePlaceId, user.HomeOffice.StartTime, user.HomeOffice.EndTime);
+            await this.trafficComputeService.InsertAllSlotsForTimeRange(user.OfficePlaceId, user.HomePlaceId, user.OfficeHome.StartTime, user.OfficeHome.EndTime);
         }
 
         private User UpdateUserObj(UserUpdateRequest userUpdate, User user)
