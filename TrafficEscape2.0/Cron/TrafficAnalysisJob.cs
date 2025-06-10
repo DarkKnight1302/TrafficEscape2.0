@@ -70,6 +70,10 @@ namespace TrafficEscape2._0.Cron
                     result = r;
                 }
             }
+            if (result.durationInMins.Count >= 50)
+            {
+                return null;
+            }
             return result;
         }
     }
