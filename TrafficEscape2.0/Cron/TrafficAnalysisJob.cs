@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using NewHorizonLib.Extensions;
+using Quartz;
 using TrafficEscape2._0.ApiClients;
 using TrafficEscape2._0.Entities;
 using TrafficEscape2._0.Repositories;
@@ -22,7 +23,8 @@ namespace TrafficEscape2._0.Cron
 
         public async Task Execute(IJobExecutionContext context)
         {
-            int currentTime = DateTime.UtcNow.Hour * 100 + DateTime.UtcNow.Minute;
+            DateTimeOffset currentIndiaTime = DateTimeOffset.Now.ToIndiaTime();
+            int currentTime = currentIndiaTime.Hour * 100 + currentIndiaTime.Minute;
             int timeSlot = 0;
             if ((currentTime % 10) < 5)
             {
@@ -38,7 +40,7 @@ namespace TrafficEscape2._0.Cron
                 }
             }
 
-            List<RouteSlots> routeSlots = await this.routeSlotRepository.GetAllRoutesForTime((int)DateTime.UtcNow.DayOfWeek, timeSlot);
+            List<RouteSlots> routeSlots = await this.routeSlotRepository.GetAllRoutesForTime((int)currentIndiaTime.DayOfWeek, timeSlot);
             RouteSlots selectedRoute = FilterRouteSlots(routeSlots);
             if (selectedRoute == null)
             {
@@ -49,7 +51,7 @@ namespace TrafficEscape2._0.Cron
             if (trafficDurationInMins != -1)
             {
                 selectedRoute.durationInMins.Add(trafficDurationInMins);
-                selectedRoute.updatedAt = DateTimeOffset.UtcNow;
+                selectedRoute.updatedAt = currentIndiaTime;
                 await this.routeSlotRepository.UpsertSlotData(selectedRoute);
             }
         }
