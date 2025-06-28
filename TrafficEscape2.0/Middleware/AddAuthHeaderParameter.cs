@@ -29,6 +29,17 @@ public class AddAuthHeaderParameter : IOperationFilter
                     Type = "string"
                 }
             });
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "Audience",
+                In = ParameterLocation.Header,
+                Description = "Audience required for this API",
+                Required = true,
+                Schema = new OpenApiSchema
+                {
+                    Type = "string"
+                }
+            });
         }
     }
 }

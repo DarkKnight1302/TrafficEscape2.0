@@ -36,6 +36,7 @@ builder.Services.AddSingleton<IGoogleTrafficApiClient, GoogleTrafficApiClient>()
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddSingleton<ILoginHandler, LoginHandler>();
+builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
 
 Registration.InitializeServices(builder.Services, "TrafficEscape", 500);
 builder.Services.AddQuartz(q =>

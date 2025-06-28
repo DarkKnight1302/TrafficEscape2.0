@@ -2,7 +2,7 @@
 {
     public static class GlobalConstants
     {
-        public const int AnalysisDays = 14;
+        public const int AnalysisDays = 21;
 
         public const string TrafficEscapeServer = "TrafficEscapeServer";
 

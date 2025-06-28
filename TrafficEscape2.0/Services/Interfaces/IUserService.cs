@@ -1,4 +1,5 @@
-﻿using TrafficEscape2._0.Models;
+﻿using TrafficEscape2._0.Entities;
+using TrafficEscape2._0.Models;
 
 namespace TrafficEscape2._0.Services.Interfaces
 {
@@ -8,7 +9,9 @@ namespace TrafficEscape2._0.Services.Interfaces
 
         public Task UpdateUser(UserUpdateRequest userUpdateRequest);
 
-        public Task<bool> IsAnalysisCompleted(string userId);
+        public Task<int> GetCompletionDays(string userId);
+
+        public Task<User> GetUser(string userId);
 
     }
 }

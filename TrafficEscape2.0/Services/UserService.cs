@@ -19,6 +19,27 @@ namespace TrafficEscape2._0.Services
             this.trafficComputeService = trafficComputeService;
         }
 
+        public async Task<int> GetCompletionDays(string userId)
+        {
+            User user = await this.userRepository.GetUser(userId);
+            if (user == null)
+            {
+                throw new TrafficEscapeException("User doesn't exist", ErrorCodes.UserNotFound);
+            }
+            DateTimeOffset currentTime = DateTimeOffset.UtcNow;
+            return (currentTime - user.AnalysisStartTime).Days >= GlobalConstants.AnalysisDays ? 0 : (GlobalConstants.AnalysisDays - ((currentTime - user.AnalysisStartTime).Days));
+        }
+
+        public async Task<User> GetUser(string userId)
+        {
+            User user = await this.userRepository.GetUser(userId);
+            if (user == null)
+            {
+                throw new TrafficEscapeException("User doesn't exist", ErrorCodes.UserNotFound);
+            }
+            return user;
+        }
+
         public async Task<bool> IsAnalysisCompleted(string userId)
         {
             User user = await this.userRepository.GetUser(userId);
