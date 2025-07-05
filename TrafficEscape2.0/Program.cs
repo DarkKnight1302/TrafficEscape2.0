@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "AllowSpecificOrigin",
                       builder =>
                       {
-                          builder.WithOrigins("https://localhost:7174") // Your frontend URL
+                          builder.WithOrigins("https://localhost:7174", "https://ambitious-sand-0822ae200.2.azurestaticapps.net", "https://trafficescape.in")
                                  .AllowAnyHeader()
                                  .AllowAnyMethod();
                       });
