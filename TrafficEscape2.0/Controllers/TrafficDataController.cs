@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TrafficEscape2._0.Handlers;
 using TrafficEscape2._0.Services.Interfaces;
 
 namespace TrafficEscape2._0.Controllers
@@ -9,11 +10,13 @@ namespace TrafficEscape2._0.Controllers
     {
         private readonly IAuthorizationService authorizationService;
         private readonly IUserService userService;
+        private readonly ITrafficDataHandler trafficDataHandler;
 
-        public TrafficDataController(IAuthorizationService authorizationService, IUserService userService)
+        public TrafficDataController(IAuthorizationService authorizationService, IUserService userService, ITrafficDataHandler trafficDataHandler)
         {
             this.authorizationService = authorizationService;
             this.userService = userService;
+            this.trafficDataHandler = trafficDataHandler;
         }
 
         [HttpGet("processingDays")]
@@ -26,6 +29,18 @@ namespace TrafficEscape2._0.Controllers
             }
             int completionDays = await this.userService.GetCompletionDays(userId);
             return Ok(completionDays);
+        }
+
+        [HttpGet("duration")]
+        [AuthRequired]
+        public async Task<IActionResult> GetDurationData(String userId, int dayOfWeek)
+        {
+            if (!this.authorizationService.IsValid(userId, HttpContext))
+            {
+                return Unauthorized();
+            }
+            var response = await this.trafficDataHandler.GetTrafficDataforDay(dayOfWeek, userId);
+            return Ok(response);
         }
     }
 }

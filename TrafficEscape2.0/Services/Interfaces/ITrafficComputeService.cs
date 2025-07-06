@@ -4,6 +4,6 @@
     {
         public Task InsertAllSlotsForTimeRange(string fromPlaceId, string toPlaceId, int startTime, int endTime);
 
-        public Task<int> GetTimeWithMinTraffic(string fromPlaceId, string toPlaceId, int dayOfWeek, int startTime, int endTime);
+        public Task<Dictionary<int, int>> GetTimeWithMinTraffic(string fromPlaceId, string toPlaceId, int dayOfWeek, int startTime, int endTime);
     }
 }

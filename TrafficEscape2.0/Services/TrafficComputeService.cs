@@ -16,24 +16,19 @@ namespace TrafficEscape2._0.Services
             this.logger = logger;
         }
 
-        public async Task<int> GetTimeWithMinTraffic(string fromPlaceId, string toPlaceId, int dayOfWeek, int startTime, int endTime)
+        public async Task<Dictionary<int, int>> GetTimeWithMinTraffic(string fromPlaceId, string toPlaceId, int dayOfWeek, int startTime, int endTime)
         {
             var timeSlots = GetAllTimeSlots(startTime, endTime);
             var routeSlots = await this.routeSlotRepository.GetSlotData(fromPlaceId, toPlaceId, dayOfWeek);
             var routeSlotDictionary = this.ConvertToRouteSlotDictionary(routeSlots);
-            int minTrafficTime = Int32.MaxValue;
-            int bestTimeSlot = -1;
+            Dictionary<int, int> minTimeMap = new Dictionary<int, int>();
             foreach(int time in timeSlots)
             {
                 var routeSlot = routeSlotDictionary[time];
                 int trafficTime = FindMedianTime(routeSlot);
-                if (trafficTime < minTrafficTime)
-                {
-                    minTrafficTime = trafficTime;
-                    bestTimeSlot = time;
-                }
+                minTimeMap[time] = trafficTime;
             }
-            return bestTimeSlot;
+            return minTimeMap;
         }
 
         private int FindMedianTime(RouteSlots routeSlots)
