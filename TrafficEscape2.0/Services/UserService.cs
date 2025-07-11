@@ -82,6 +82,10 @@ namespace TrafficEscape2._0.Services
 
         private bool IsSameSetting(UserUpdateRequest userUpdateRequest, User user)
         {
+            if (string.IsNullOrEmpty(user.HomePlaceId))
+            {
+                return false;
+            }
             if (!user.HomePlaceId.Equals(userUpdateRequest.HomePlaceId))
             {
                 return false;
