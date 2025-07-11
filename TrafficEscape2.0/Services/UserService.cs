@@ -69,10 +69,44 @@ namespace TrafficEscape2._0.Services
             {
                 throw new TrafficEscapeException("User doesn't exist for update", ErrorCodes.UserNotFound);
             }
+            if (IsSameSetting(userUpdateRequest, user))
+            {
+                // do nothing
+                return;
+            }
             user = UpdateUserObj(userUpdateRequest, user);
             await this.userRepository.UpdateUser(user).ConfigureAwait(false);
             await this.trafficComputeService.InsertAllSlotsForTimeRange(user.HomePlaceId, user.OfficePlaceId, user.HomeOffice.StartTime, user.HomeOffice.EndTime);
             await this.trafficComputeService.InsertAllSlotsForTimeRange(user.OfficePlaceId, user.HomePlaceId, user.OfficeHome.StartTime, user.OfficeHome.EndTime);
+        }
+
+        private bool IsSameSetting(UserUpdateRequest userUpdateRequest, User user)
+        {
+            if (!user.HomePlaceId.Equals(userUpdateRequest.HomePlaceId))
+            {
+                return false;
+            }
+            if (!user.OfficePlaceId.Equals(userUpdateRequest.OfficePlaceId))
+            {
+                return false;
+            }
+            if (user.HomeOffice.StartTime != userUpdateRequest.HomeToOfficeStartTime)
+            {
+                return false;
+            }
+            if (user.HomeOffice.EndTime != userUpdateRequest.HomeToOfficeEndTime)
+            {
+                return false;
+            }
+            if (user.OfficeHome.StartTime != userUpdateRequest.OfficeToHomeStartTime)
+            {
+                return false;
+            }
+            if (user.OfficeHome.EndTime != userUpdateRequest.OfficeToHomeEndTime)
+            {
+                return false;
+            }
+            return true;
         }
 
         private User UpdateUserObj(UserUpdateRequest userUpdate, User user)
