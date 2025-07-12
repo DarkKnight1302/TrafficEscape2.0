@@ -15,6 +15,8 @@
         public DateTimeOffset AnalysisStartTime { get; set; }
 
         public DateTimeOffset UpdatedAt { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
     }
 
     public class TimeRange

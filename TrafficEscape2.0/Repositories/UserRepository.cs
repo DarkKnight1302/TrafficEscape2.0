@@ -20,7 +20,8 @@ namespace TrafficEscape2._0.Repositories
             Entities.User user = new Entities.User()
             {
                 id = userId,
-                UpdatedAt = DateTimeOffset.UtcNow
+                UpdatedAt = DateTimeOffset.UtcNow,
+                CreatedAt = DateTimeOffset.UtcNow
             };
             await container.CreateItemAsync<Entities.User>(user, new PartitionKey(userId));
         }
