@@ -41,40 +41,61 @@ namespace TrafficEscape2._0.Cron
             }
 
             List<RouteSlots> routeSlots = await this.routeSlotRepository.GetAllRoutesForTime((int)currentIndiaTime.DayOfWeek, timeSlot);
-            RouteSlots selectedRoute = FilterRouteSlots(routeSlots);
-            if (selectedRoute == null)
+            List<RouteSlots> selectedRoutes = FilterRouteSlots(routeSlots);
+            if (selectedRoutes.Count == 0)
             {
                 this.logger.LogInformation($"Not route slot found for {timeSlot}");
                 return;
             }
-            int trafficDurationInMins = await this.googleTrafficApiClient.GetRouteDurationInMins(selectedRoute.fromPlaceId, selectedRoute.toPlaceId);
-            if (trafficDurationInMins != -1)
+            foreach (RouteSlots selectedRoute in selectedRoutes)
             {
-                selectedRoute.durationInMins.Add(trafficDurationInMins);
-                selectedRoute.updatedAt = currentIndiaTime;
-                await this.routeSlotRepository.UpsertSlotData(selectedRoute);
+                int trafficDurationInMins = await this.googleTrafficApiClient.GetRouteDurationInMins(selectedRoute.fromPlaceId, selectedRoute.toPlaceId);
+                if (trafficDurationInMins != -1)
+                {
+                    selectedRoute.durationInMins.Add(trafficDurationInMins);
+                    selectedRoute.updatedAt = currentIndiaTime;
+                    if (selectedRoute.durationInMins.Count > 50)
+                    {
+                        selectedRoute.durationInMins.RemoveAt(0);
+                    }
+                    await this.routeSlotRepository.UpsertSlotData(selectedRoute);
+                }
             }
         }
 
-        private static RouteSlots FilterRouteSlots(List<RouteSlots> routeSlots)
+        private static List<RouteSlots> FilterRouteSlots(List<RouteSlots> routeSlots)
         {
+            List<RouteSlots> result = new List<RouteSlots>();
             if (routeSlots == null || routeSlots.Count == 0)
             {
-                return null;
+                return result;
             }
-            RouteSlots result = null;
+           
             int minDataCount = Int32.MaxValue;
+
             foreach(RouteSlots r in routeSlots)
             {
-                if (r.durationInMins.Count < minDataCount)
+                if (r.durationInMins.Count == 0)
                 {
-                    minDataCount = r.durationInMins.Count;
-                    result = r;
+                    result.Add(r);
+                    continue;
                 }
             }
-            if (result.durationInMins.Count >= 50)
+            if (result.Count == 0)
             {
-                return null;
+                RouteSlots minDataSlot = null;
+                foreach (RouteSlots r in routeSlots)
+                {
+                    if (r.durationInMins.Count < minDataCount)
+                    {
+                        minDataCount = r.durationInMins.Count;
+                        minDataSlot = r;
+                    }
+                }
+                if (minDataSlot != null)
+                {
+                    result.Add(minDataSlot);
+                }
             }
             return result;
         }

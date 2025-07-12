@@ -12,7 +12,7 @@ namespace TrafficEscape2._0.ApiClients
         private readonly ILogger<GoogleTrafficApiClient> logger;
         private string ApiKey;
         private HttpClient httpClient;
-        private const int MaxRequestCountPerDay = 500;
+        private const int MaxRequestCountPerDay = 2500;
         private RequestThresholdPerDay requestThresholdPerDay;
 
         public GoogleTrafficApiClient(ISecretService secretService, ILogger<GoogleTrafficApiClient> logger)
