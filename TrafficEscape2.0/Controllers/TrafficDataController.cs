@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TrafficEscape2._0.Handlers;
+using TrafficEscape2._0.Models;
 using TrafficEscape2._0.Services.Interfaces;
 
 namespace TrafficEscape2._0.Controllers
@@ -39,7 +40,7 @@ namespace TrafficEscape2._0.Controllers
             {
                 return Unauthorized();
             }
-            var response = await this.trafficDataHandler.GetTrafficDataforDay(dayOfWeek, userId);
+            TrafficDataResponse response = await this.trafficDataHandler.GetTrafficDataforDay(dayOfWeek, userId);
             return Ok(response);
         }
     }
