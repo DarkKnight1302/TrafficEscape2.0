@@ -51,15 +51,15 @@ namespace TrafficEscape2._0.Services
             return (currentTime - user.AnalysisStartTime).Days > GlobalConstants.AnalysisDays;
         }
 
-        public async Task RegisterUser(string userId)
+        public async Task<User> RegisterUser(string userId)
         {
             User user = await this.userRepository.GetUser(userId);
             if (user != null)
             {
                 // already exists;
-                return;
+                return user;
             }
-            await this.userRepository.CreateUser(userId);
+            return await this.userRepository.CreateUser(userId);
         }
 
         public async Task UpdateUser(UserUpdateRequest userUpdateRequest)

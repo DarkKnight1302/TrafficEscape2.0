@@ -4,7 +4,7 @@ namespace TrafficEscape2._0.Repositories
 {
     public interface IUserRepository
     {
-        public Task CreateUser(string userId);
+        public Task<User> CreateUser(string userId);
 
         public Task UpdateUser(User user);
 

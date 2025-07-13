@@ -5,7 +5,7 @@ namespace TrafficEscape2._0.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task RegisterUser(string userId);
+        public Task<User> RegisterUser(string userId);
 
         public Task UpdateUser(UserUpdateRequest userUpdateRequest);
 

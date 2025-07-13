@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using NewHorizonLib.Services;
+using User = TrafficEscape2._0.Entities.User;
 
 namespace TrafficEscape2._0.Repositories
 {
@@ -14,7 +15,7 @@ namespace TrafficEscape2._0.Repositories
             this.logger = logger;
         }
 
-        public async Task CreateUser(string userId)
+        public async Task<User> CreateUser(string userId)
         {
             var container = GetContainer();
             Entities.User user = new Entities.User()
@@ -23,7 +24,8 @@ namespace TrafficEscape2._0.Repositories
                 UpdatedAt = DateTimeOffset.UtcNow,
                 CreatedAt = DateTimeOffset.UtcNow
             };
-            await container.CreateItemAsync<Entities.User>(user, new PartitionKey(userId));
+            ItemResponse<User> resp = await container.CreateItemAsync<User>(user, new PartitionKey(userId));
+            return resp.Resource;
         }
 
         public async Task<Entities.User> GetUser(string userId)
