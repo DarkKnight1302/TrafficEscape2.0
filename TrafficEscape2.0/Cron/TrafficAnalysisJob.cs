@@ -23,7 +23,7 @@ namespace TrafficEscape2._0.Cron
 
         public async Task Execute(IJobExecutionContext context)
         {
-            DateTimeOffset currentIndiaTime = DateTimeOffset.Now.ToIndiaTime();
+            DateTimeOffset currentIndiaTime = DateTimeOffset.UtcNow.ToIndiaTime();
             int currentTime = currentIndiaTime.Hour * 100 + currentIndiaTime.Minute;
             int timeSlot = 0;
             if ((currentTime % 10) < 5)
