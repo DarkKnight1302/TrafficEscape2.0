@@ -40,7 +40,7 @@ namespace TrafficEscape2._0.Cron
                     timeSlot += 100;
                 }
             }
-
+            this.logger.LogInformation($"Time slot picked {timeSlot} - {(int)currentIndiaTime.DayOfWeek}");
             List<RouteSlots> routeSlots = await this.routeSlotRepository.GetAllRoutesForTime((int)currentIndiaTime.DayOfWeek, timeSlot);
             List<RouteSlots> selectedRoutes = FilterRouteSlots(routeSlots);
             if (selectedRoutes.Count == 0)
