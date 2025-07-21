@@ -24,9 +24,9 @@ namespace TrafficEscape2._0.ApiClients
             this.ApiKey = secretService.GetSecretValue("GOOGLE_PLACE_API_KEY");
         }
 
-        public async Task<int> GetRouteDurationInMins(string fromPlaceId, string toPlaceId)
+        public async Task<int> GetRouteDurationInMins(string fromPlaceId, string toPlaceId, bool ignoreThreshold = false)
         {
-            if (!this.requestThresholdPerDay.AllowRequest())
+            if (!this.requestThresholdPerDay.AllowRequest() && !ignoreThreshold)
             {
                 return -1;
             }

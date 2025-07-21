@@ -2,6 +2,6 @@
 {
     public interface IGoogleTrafficApiClient
     {
-        public Task<int> GetRouteDurationInMins(string fromPlaceId, string toPlaceId);
+        public Task<int> GetRouteDurationInMins(string fromPlaceId, string toPlaceId, bool ignoreThreshold = false);
     }
 }

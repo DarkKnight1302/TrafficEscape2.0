@@ -1,4 +1,5 @@
-﻿using TrafficEscape2._0.Constants;
+﻿using TrafficEscape2._0.ApiClients;
+using TrafficEscape2._0.Constants;
 using TrafficEscape2._0.Entities;
 using TrafficEscape2._0.Exceptions;
 using TrafficEscape2._0.Models;
@@ -12,11 +13,13 @@ namespace TrafficEscape2._0.Services
     {
         private readonly IUserRepository userRepository;
         private readonly ITrafficComputeService trafficComputeService;
+        private readonly IGoogleTrafficApiClient googleTrafficApiClient;
 
-        public UserService(IUserRepository userRepository, ITrafficComputeService trafficComputeService)
+        public UserService(IUserRepository userRepository, ITrafficComputeService trafficComputeService, IGoogleTrafficApiClient googleTrafficApiClient)
         {
             this.userRepository = userRepository;
             this.trafficComputeService = trafficComputeService;
+            this.googleTrafficApiClient = googleTrafficApiClient;
         }
 
         public async Task<int> GetCompletionDays(string userId)
@@ -74,10 +77,33 @@ namespace TrafficEscape2._0.Services
                 // do nothing
                 return;
             }
+            bool areValidLoc = await AreValidLocations(userUpdateRequest.HomePlaceId, userUpdateRequest.OfficePlaceId);
+
+            if (!areValidLoc)
+            {
+                throw new TrafficEscapeException("Invalid location Ids", 123);
+            }
             user = UpdateUserObj(userUpdateRequest, user);
             await this.userRepository.UpdateUser(user).ConfigureAwait(false);
             await this.trafficComputeService.InsertAllSlotsForTimeRange(user.HomePlaceId, user.OfficePlaceId, user.HomeOffice.StartTime, user.HomeOffice.EndTime);
             await this.trafficComputeService.InsertAllSlotsForTimeRange(user.OfficePlaceId, user.HomePlaceId, user.OfficeHome.StartTime, user.OfficeHome.EndTime);
+        }
+
+        private async Task<bool> AreValidLocations(string homePlaceId, string officePlaceId)
+        {
+            int retryCount = 3;
+            do
+            {
+                int result = await this.googleTrafficApiClient.GetRouteDurationInMins(homePlaceId, officePlaceId, true);
+                if (result != -1)
+                {
+                    return true;
+                }
+                await Task.Delay(1000);
+                retryCount--;
+            } while (retryCount > 0);
+
+            return false;
         }
 
         private bool IsSameSetting(UserUpdateRequest userUpdateRequest, User user)
