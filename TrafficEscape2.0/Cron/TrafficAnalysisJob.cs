@@ -24,6 +24,7 @@ namespace TrafficEscape2._0.Cron
         public async Task Execute(IJobExecutionContext context)
         {
             DateTimeOffset currentIndiaTime = DateTimeOffset.UtcNow.ToIndiaTime();
+            this.logger.LogInformation($"Running traffic analysis job for time {currentIndiaTime}, Previous logged time {DateTimeOffset.Now.ToIndiaTime()}");
             int currentTime = currentIndiaTime.Hour * 100 + currentIndiaTime.Minute;
             int timeSlot = 0;
             if ((currentTime % 10) < 5)
