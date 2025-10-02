@@ -62,7 +62,7 @@ namespace TrafficEscape2._0.Repositories
         public async Task UpsertSlotData(RouteSlots routeSlots)
         {
             var container = GetContainer();
-            await container.UpsertItemAsync(routeSlots).ConfigureAwait(false);
+            await container.UpsertItemAsync(routeSlots, new PartitionKey(routeSlots.dayOfWeek)).ConfigureAwait(false);
         }
 
         private Container GetContainer()
