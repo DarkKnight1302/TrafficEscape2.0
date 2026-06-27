@@ -1,6 +1,6 @@
-﻿namespace TrafficEscape2._0.Models
+namespace TrafficEscape2._0.Models
 {
-    public class UserUpdateRequest
+    public class UserProfileResponse
     {
         public string UserId { get; set; }
 
@@ -19,7 +19,5 @@
         public int OfficeToHomeStartTime { get; set; }
 
         public int OfficeToHomeEndTime { get; set; }
-
-        public string Audience { get; set; }
     }
 }

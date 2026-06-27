@@ -8,6 +8,10 @@
 
         public string OfficePlaceId { get; set; }
 
+        public string HomeLocationName { get; set; }
+
+        public string OfficeLocationName { get; set; }
+
         public TimeRange HomeOffice { get; set; }
 
         public TimeRange OfficeHome { get; set; }

@@ -120,6 +120,14 @@ namespace TrafficEscape2._0.Services
             {
                 return false;
             }
+            if (!string.Equals(user.HomeLocationName, userUpdateRequest.HomeLocationName))
+            {
+                return false;
+            }
+            if (!string.Equals(user.OfficeLocationName, userUpdateRequest.OfficeLocationName))
+            {
+                return false;
+            }
             if (user.HomeOffice.StartTime != userUpdateRequest.HomeToOfficeStartTime)
             {
                 return false;
@@ -148,6 +156,14 @@ namespace TrafficEscape2._0.Services
             if (!string.IsNullOrEmpty(userUpdate.OfficePlaceId))
             {
                 user.OfficePlaceId = userUpdate.OfficePlaceId;
+            }
+            if (!string.IsNullOrEmpty(userUpdate.HomeLocationName))
+            {
+                user.HomeLocationName = userUpdate.HomeLocationName;
+            }
+            if (!string.IsNullOrEmpty(userUpdate.OfficeLocationName))
+            {
+                user.OfficeLocationName = userUpdate.OfficeLocationName;
             }
             TimeRange homeOffice = new TimeRange()
             {
