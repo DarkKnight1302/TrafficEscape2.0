@@ -7,5 +7,9 @@
 
         public Dictionary<int, int> OfficeToHomeTrafficData { get; set; } = new Dictionary<int, int>();
 
+        public Dictionary<int, DateTimeOffset> HomeToOfficeLastUpdated { get; set; } = new Dictionary<int, DateTimeOffset>();
+
+        public Dictionary<int, DateTimeOffset> OfficeToHomeLastUpdated { get; set; } = new Dictionary<int, DateTimeOffset>();
+
     }
 }

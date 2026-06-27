@@ -25,8 +25,12 @@ namespace TrafficEscape2._0.Handlers
             TrafficDataResponse trafficDataResponse = new TrafficDataResponse();
             var homeOfficeDataMap = await this.trafficComputeService.GetTimeWithMinTraffic(user.HomePlaceId, user.OfficePlaceId, dayOfWeek, user.HomeOffice.StartTime, user.HomeOffice.EndTime);
             var officeHomeDataMap = await this.trafficComputeService.GetTimeWithMinTraffic(user.OfficePlaceId, user.HomePlaceId, dayOfWeek, user.OfficeHome.StartTime, user.OfficeHome.EndTime);
-            trafficDataResponse.HomeToOfficeTrafficData = homeOfficeDataMap;
-            trafficDataResponse.OfficeToHomeTrafficData = officeHomeDataMap;
+
+            trafficDataResponse.HomeToOfficeTrafficData = homeOfficeDataMap.ToDictionary(x => x.Key, x => x.Value.DurationInMins);
+            trafficDataResponse.OfficeToHomeTrafficData = officeHomeDataMap.ToDictionary(x => x.Key, x => x.Value.DurationInMins);
+            trafficDataResponse.HomeToOfficeLastUpdated = homeOfficeDataMap.ToDictionary(x => x.Key, x => x.Value.LastUpdated);
+            trafficDataResponse.OfficeToHomeLastUpdated = officeHomeDataMap.ToDictionary(x => x.Key, x => x.Value.LastUpdated);
+
             return trafficDataResponse;
         }
     }

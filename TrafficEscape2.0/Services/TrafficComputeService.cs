@@ -1,4 +1,5 @@
 ﻿using TrafficEscape2._0.Entities;
+using TrafficEscape2._0.Models;
 using TrafficEscape2._0.Repositories;
 using TrafficEscape2._0.Services.Interfaces;
 
@@ -16,19 +17,31 @@ namespace TrafficEscape2._0.Services
             this.logger = logger;
         }
 
-        public async Task<Dictionary<int, int>> GetTimeWithMinTraffic(string fromPlaceId, string toPlaceId, int dayOfWeek, int startTime, int endTime)
+        public async Task<Dictionary<int, TrafficTimeData>> GetTimeWithMinTraffic(string fromPlaceId, string toPlaceId, int dayOfWeek, int startTime, int endTime)
         {
             var timeSlots = GetAllTimeSlots(startTime, endTime);
             var routeSlots = await this.routeSlotRepository.GetSlotData(fromPlaceId, toPlaceId, dayOfWeek);
             var routeSlotDictionary = this.ConvertToRouteSlotDictionary(routeSlots);
-            Dictionary<int, int> minTimeMap = new Dictionary<int, int>();
-            foreach(int time in timeSlots)
+            Dictionary<int, TrafficTimeData> trafficDataMap = new Dictionary<int, TrafficTimeData>();
+            foreach (int time in timeSlots)
             {
-                var routeSlot = routeSlotDictionary[time];
-                int trafficTime = FindMedianTime(routeSlot);
-                minTimeMap[time] = trafficTime;
+                if (!routeSlotDictionary.TryGetValue(time, out var routeSlot))
+                {
+                    trafficDataMap[time] = new TrafficTimeData
+                    {
+                        DurationInMins = int.MaxValue,
+                        LastUpdated = DateTimeOffset.MinValue
+                    };
+                    continue;
+                }
+
+                trafficDataMap[time] = new TrafficTimeData
+                {
+                    DurationInMins = FindMedianTime(routeSlot),
+                    LastUpdated = routeSlot.updatedAt
+                };
             }
-            return minTimeMap;
+            return trafficDataMap;
         }
 
         private int FindMedianTime(RouteSlots routeSlots)
